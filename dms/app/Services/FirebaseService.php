@@ -11,7 +11,7 @@ class FirebaseService
     public function __construct()
     {
         $factory = (new Factory)
-            ->withServiceAccount(storage_path('firebase_credentials.json'))  // Path to your Firebase credentials
+            ->withServiceAccount(storage_path('FIREBASE_CREDENTIALS'))  // Path to your Firebase credentials
             ->withDatabaseUri(env('FIREBASE_DATABASE_URL'));  // Firebase Realtime Database URL
 
         $this->firebase = $factory->createDatabase();

@@ -32,8 +32,9 @@ class FirebaseController extends Controller
     // Fetch All Users from Firebase
     public function getUsers()
     {
-        $users = $this->firebase->getReference('users')->getValue();
-        return response()->json($users);
+        $users = $this->firebase->getReference('user-account')->getValue();
+        return view('users.index', compact('users'));
+        //return response()->json($users);
     }
 
     // Update User in Firebase
