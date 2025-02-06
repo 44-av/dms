@@ -3,6 +3,7 @@
 /public/build
 /public/hot
 /public/storage
+/app/Services/firebase-credential.json
 /storage/*.key
 /storage/pail
 /vendor

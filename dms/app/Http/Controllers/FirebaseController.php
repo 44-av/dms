@@ -14,12 +14,10 @@ class FirebaseController extends Controller
     {
         $this->firebase = $firebaseService->getDatabase();
     }
-
-    // Store Data in Firebase
     public function storeUser()
     {
         $newUser = $this->firebase
-            ->getReference('users/' . uniqid()) // Firebase Node
+            ->getReference('user-account/' . uniqid()) // Firebase Node
             ->set([
                 'name' => 'John Doe',
                 'email' => 'johndoe@example.com',
@@ -28,31 +26,58 @@ class FirebaseController extends Controller
 
         return response()->json(['message' => 'User added successfully!']);
     }
-
-    // Fetch All Users from Firebase
     public function getUsers()
     {
         $users = $this->firebase->getReference('user-account')->getValue();
-        return view('users.index', compact('users'));
-        //return response()->json($users);
+        return view('users', compact('users'));
     }
-
-    // Update User in Firebase
     public function updateUser($id)
     {
         $this->firebase
-            ->getReference('users/' . $id)
+            ->getReference('user-account/' . $id)
             ->update([
                 'age' => 30 // Update age to 30
             ]);
 
         return response()->json(['message' => 'User updated successfully!']);
     }
-
-    // Delete User from Firebase
     public function deleteUser($id)
     {
-        $this->firebase->getReference('users/' . $id)->remove();
+        $this->firebase->getReference('user-account/' . $id)->remove();
         return response()->json(['message' => 'User deleted successfully!']);
     }
+
+    public function storeDisease()
+    {
+        $newUser = $this->firebase
+            ->getReference('disease/' . uniqid()) // Firebase Node
+            ->set([
+                'name' => 'Virus',
+                'description' => 'Virus',
+                'scan-date' => 'January 2, 2025',
+            ]);
+
+        return response()->json(['message' => 'Disease added successfully!']);
+    }
+    public function getDisease()
+    {
+        $data = $this->firebase->getReference('disease')->getValue();
+        return view('diseases', compact('data'));
+    }
+    public function updateDisease($id)
+    {
+        $this->firebase
+            ->getReference('disease/' . $id)
+            ->update([
+                'age' => 30 // Update age to 30
+            ]);
+
+        return response()->json(['message' => 'User updated successfully!']);
+    }
+    public function deleteDisease($id)
+    {
+        $this->firebase->getReference('disease/' . $id)->remove();
+        return response()->json(['message' => 'User deleted successfully!']);
+    }
+    
 }
