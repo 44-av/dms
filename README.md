@@ -42,108 +42,12 @@ Install Laravel project dependencies using Composer:
   composer install
   ```
 
-### 3. Set Up Firebase
-Go to your Firebase Console and create a new Firebase project.
-Enable Firebase Authentication (e.g., Email/Password) under the Authentication section.
-Set up Firestore Database under the Database section for storing disease-related data.
-In the Firebase Console, navigate to Project Settings > General, then scroll to the "Your Apps" section and add a web app.
-Copy the Firebase SDK configuration and use it in the next steps.
-
-### 4. Configure Firebase SDK in Laravel
-In the .env file, configure your Firebase API keys and Firebase credentials. Here’s an example:
-
-  ```bash
-  FIREBASE_API_KEY=your_api_key
-  FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
-  FIREBASE_PROJECT_ID=your_project_id
-  FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
-  FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-  FIREBASE_APP_ID=your_app_id
-  FIREBASE_MEASUREMENT_ID=your_measurement_id
-  ```
-
-Install the Firebase PHP SDK:
-
-  ```bash
-  composer require kreait/firebase-php
-  ```
-
-Then, create a FirebaseService.php file in your app (e.g., in app/Services/) to initialize Firebase:
+### 3. Copy env file
 ```bash
-php
-Copy
-<?php
-namespace App\Services;
-use Kreait\Firebase\Factory;
-class FirebaseService
-{
-    protected $auth;
-    protected $database;
-
-    public function __construct()
-    {
-        $this->firebase = (new Factory)
-            ->withServiceAccount(__DIR__.'/firebase_credentials.json') // Path to Firebase credentials file
-            ->create();
-        
-        $this->auth = $this->firebase->getAuth();
-        $this->database = $this->firebase->getDatabase();
-    }
-
-    // Methods to interact with Firebase (e.g., authentication, database operations) can go here.
-}
-```
-### 5. Set Up Firebase Authentication
-In your Laravel routes or controllers, use Firebase to authenticate users:
-
-```bash
-use App\Services\FirebaseService;
-class AuthController extends Controller
-{
-    protected $firebaseService;
-    public function __construct(FirebaseService $firebaseService)
-    {
-        $this->firebaseService = $firebaseService;
-    }
-    public function register(Request $request)
-    {
-        // Register user using Firebase Authentication
-        $user = $this->firebaseService->register($request->email, $request->password);
-        
-        // Handle the response and create a local user in Laravel if needed
-    }
-
-    public function login(Request $request)
-    {
-        // Log in user using Firebase Authentication
-        $user = $this->firebaseService->login($request->email, $request->password);
-        
-        // Handle the response
-    }
-}
-```
-### 6. Set Up Firestore Database
-Use Firebase Firestore to store disease-related data such as reports:
-
-```bash
-public function reportDisease(Request $request)
-{
-    $data = [
-        'user_id' => auth()->id(),
-        'symptoms' => $request->symptoms,
-        'location' => $request->location,
-        'date' => now(),
-    ];
-
-    $this->firebaseService->getDatabase()
-        ->getReference('disease_reports')
-        ->push($data);
-    
-    return response()->json(['message' => 'Disease report submitted successfully']);
-}
+  cp .env.example .env
 ```
 
-### 7. Run the Laravel App
+### 4. Run the Laravel App
 Now that everything is set up, you can run the Laravel application. First, create the application key by running:
 ```bash
 php artisan key:generate
@@ -155,33 +59,6 @@ php artisan serve
 
 Your app should now be running on http://localhost:8000.
 
-### 8. Test Firebase Authentication and Firestore
-Make sure to test user registration and login via Firebase Authentication and verify that disease reports are stored in Firestore.
-
-Firebase Structure
-Authentication: Firebase handles user registration and login. Users must sign in to report diseases and access features.
-
-Firestore Database: Disease-related data, such as user reports, symptoms, and locations, is stored here. Example structure:
-
-```bash
-/disease_reports
-  /reportId
-    - user_id: "userId"
-    - symptoms: ["fever", "cough"]
-    - location: "New York"
-    - date: "2025-02-04"
-Firebase Security Rules
-Set up security rules for Firestore to restrict access to authenticated users only. Below is an example of a security rule:
-
-{
-  "rules": {
-    "disease_reports": {
-      ".read": "auth != null",
-      ".write": "auth != null"
-    }
-  }
-}
-```
 
 Make sure to test and adapt your security rules based on your application's needs.
 
