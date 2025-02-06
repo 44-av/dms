@@ -7,5 +7,5 @@ use App\Http\Controllers\FirebaseController;
 //Route::get('/firebase/users', [FirebaseController::class, 'getUsers']);
 
  Route::get('/', function () {
-     return view('welcome');
+     return view('pages.auth.login');
  });
