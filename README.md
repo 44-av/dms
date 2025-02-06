@@ -51,8 +51,9 @@ Install Laravel project dependencies using Composer:
 Now that everything is set up, you can run the Laravel application. First, create the application key by running:
 ```bash
 php artisan key:generate
-Then, run the Laravel development server:
 ```
+Then, run the Laravel development server:
+
 ```bash
 php artisan serve
 ```
